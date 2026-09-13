@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using TimeTravelTourismAgency.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//PostgreSQL DbContext Servis Kaydý
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
