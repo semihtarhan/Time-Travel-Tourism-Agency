@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TimeTravelTourismAgency.Data;
-using TimeTravelTourismAgency.Models;
+using TimeTravelTourismAgency.DTOs;
+using TimeTravelTourismAgency.Services;
 
 namespace TimeTravelTourismAgency.Controllers;
 
@@ -9,89 +8,66 @@ namespace TimeTravelTourismAgency.Controllers;
 [Route("api/[controller]")]
 public class TimeDestinationsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ITimeDestinationService _service;
 
-    public TimeDestinationsController(AppDbContext context)
+    public TimeDestinationsController(ITimeDestinationService service)
     {
-        _context = context;
+        _service = service;
     }
 
-    // GET: api/TimeDestinations (Tüm destinasyonları getirir)
+    // GET: api/TimeDestinations
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TimeDestination>>> GetDestinations()
+    public async Task<ActionResult<IEnumerable<TimeDestinationDto>>> GetDestinations()
     {
-        return await _context.TimeDestinations.ToListAsync();
+        var destinations = await _service.GetAllAsync();
+        return Ok(destinations);
     }
 
-    // GET: api/TimeDestinations/5 (ID'ye göre tek bir destinasyon getirir)
-    [HttpGet("{id}")]
-    public async Task<ActionResult<TimeDestination>> GetDestination(int id)
+    // GET: api/TimeDestinations/5
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<TimeDestinationDto>> GetDestination(int id)
     {
-        var destination = await _context.TimeDestinations.FindAsync(id);
-
+        var destination = await _service.GetByIdAsync(id);
         if (destination == null)
         {
             return NotFound(new { message = $"{id} ID'li destinasyon bulunamadı." });
         }
 
-        return destination;
+        return Ok(destination);
     }
 
-    // POST: api/TimeDestinations (Yeni bir zaman destinasyonu ekler)
+    // POST: api/TimeDestinations
     [HttpPost]
-    public async Task<ActionResult<TimeDestination>> CreateDestination(TimeDestination destination)
+    public async Task<ActionResult<TimeDestinationDto>> CreateDestination([FromBody] CreateTimeDestinationDto dto)
     {
-        _context.TimeDestinations.Add(destination);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetDestination), new { id = destination.Id }, destination);
+        // Parameter CreateTimeDestinationDto olduğu için FluentValidation burada otomatik çalışacak!
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetDestination), new { id = created.Id }, created);
     }
 
-    // PUT: api/TimeDestinations/5 (Mevcut destinasyonu günceller)
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateDestination(int id, TimeDestination destination)
+    // PUT: api/TimeDestinations/5
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateDestination(int id, [FromBody] UpdateTimeDestinationDto dto)
     {
-        if (id != destination.Id)
+        var success = await _service.UpdateAsync(id, dto);
+        if (!success)
         {
-            return BadRequest(new { message = "ID eşleşmiyor." });
-        }
-
-        _context.Entry(destination).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!DestinationExists(id))
-            {
-                return NotFound();
-            }
-            throw;
+            return NotFound(new { message = $"{id} ID'li destinasyon bulunamadı." });
         }
 
         return NoContent();
     }
 
-    // DELETE: api/TimeDestinations/5 (Destinasyonu siler)
-    [HttpDelete("{id}")]
+    // DELETE: api/TimeDestinations/5
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteDestination(int id)
     {
-        var destination = await _context.TimeDestinations.FindAsync(id);
-        if (destination == null)
+        var success = await _service.DeleteAsync(id);
+        if (!success)
         {
-            return NotFound();
+            return NotFound(new { message = $"{id} ID'li destinasyon bulunamadı." });
         }
 
-        _context.TimeDestinations.Remove(destination);
-        await _context.SaveChangesAsync();
-
         return NoContent();
-    }
-
-    private bool DestinationExists(int id)
-    {
-        return _context.TimeDestinations.Any(e => e.Id == id);
     }
 }
