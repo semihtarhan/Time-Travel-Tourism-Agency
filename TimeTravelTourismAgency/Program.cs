@@ -14,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Service & Repository Kayýtlarý
 builder.Services.AddScoped<ITimeDestinationService, TimeDestinationService>();
 
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 // 3. MVC + API Controllers Kaydý
 builder.Services.AddControllersWithViews();
 
