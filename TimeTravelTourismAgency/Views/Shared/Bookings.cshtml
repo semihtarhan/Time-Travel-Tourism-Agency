@@ -1,0 +1,127 @@
+﻿@using TimeTravelTourismAgency.DTOs
+@model IEnumerable<BookingDtos>
+
+@{
+    ViewData["Title"] = "Rezervasyonlar";
+}
+
+<div class="py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-light mb-1">
+                <i class="bi bi-journal-bookmark text-primary me-2"></i>Zaman Seyahati Rezervasyonları
+            </h2>
+            <p class="text-secondary mb-0">Tüm zaman sıçraması biletleri ve yolcu kayıtları.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-primary rounded-pill px-3">
+            <i class="bi bi-plus-lg me-1"></i>Yeni Bilet Kes
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 border border-secondary-subtle rounded-4 bg-dark bg-opacity-25">
+            <i class="bi bi-calendar-x fs-1 text-secondary"></i>
+            <h5 class="text-light mt-3">Henüz Kayıtlı Rezervasyon Yok</h5>
+            <p class="text-secondary small">Ana sayfadan bir destinasyon seçip bilet oluşturabilirsiniz.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card bg-dark border border-secondary-subtle rounded-4 overflow-hidden shadow">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead class="table-secondary text-uppercase small border-bottom border-secondary">
+                        <tr>
+                            <th class="ps-4">Rezervasyon No</th>
+                            <th>Müşteri</th>
+                            <th>Zaman Rotası</th>
+                            <th>Yolcu Sayısı</th>
+                            <th>Toplam Tutar</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                            <th class="text-end pe-4">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-primary">#@item.Id</td>
+                                <td>
+                                    <div class="fw-semibold text-light">@item.CustomerName</div>
+                                    <div class="text-secondary small">Müşteri ID: @item.CustomerId</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">
+                                        <i class="bi bi-geo-alt me-1"></i>@item.DestinationTitle
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="bi bi-person me-1 text-secondary"></i>@item.PassengerCount Kişi
+                                </td>
+                                <td class="fw-bold text-light">
+                                    @item.TotalPrice.ToString("N0") ₺
+                                </td>
+                                <td class="text-secondary small">
+                                    @item.BookingDate.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                                <td>
+                                    @if (item.Status == "Confirmed")
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                            <i class="bi bi-check-circle me-1"></i>Onaylandı
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">
+                                            <i class="bi bi-x-circle me-1"></i>İptal Edildi
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    @if (item.Status == "Confirmed")
+                                    {
+                                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="cancelBooking(@item.Id)">
+                                            İptal Et
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">İşlem Yok</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    async function cancelBooking(id) {
+        if (!confirm(`#${id} numaralı rezervasyonu iptal etmek istediğinize emin misiniz?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/Bookings/${id}/cancel`, {
+                method: 'PUT'
+            });
+
+            if (response.ok) {
+                alert("Rezervasyon başarıyla iptal edildi.");
+                location.reload();
+            } else {
+                alert("İptal işlemi sırasında bir hata oluştu.");
+            }
+        } catch (e) {
+            alert("Sunucuya bağlanılamadı.");
+        }
+    }
+</script>
+}
