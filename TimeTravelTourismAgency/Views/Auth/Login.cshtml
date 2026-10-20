@@ -1,0 +1,49 @@
+﻿@model TimeTravelTourismAgency.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Müşteri Girişi";
+}
+
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card bg-dark border border-secondary text-light rounded-4 p-4 shadow-lg" style="width: 100%; max-width: 420px;">
+        <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-25 text-primary rounded-circle p-3 mb-2">
+                <i class="bi bi-person-circle fs-1"></i>
+            </div>
+            <h3 class="fw-bold mb-1">Müşteri Girişi</h3>
+            <p class="text-secondary small">Rezervasyonlarınızı yönetmek için kayıtlı e-postanızı girin.</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>@ViewBag.Error
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+            <div class="mb-4">
+                <label class="form-label text-secondary small">E-Posta Adresi</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-black border-secondary text-secondary">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                    <input asp-for="Email" type="email" class="form-control bg-black border-secondary text-light" placeholder="ornek@mail.com" required />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label text-secondary small">Şifre</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-black border-secondary text-secondary">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                    <input asp-for="Password" type="password" class="form-control bg-black border-secondary text-light" placeholder="**************" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
+                Giriş Yap
+            </button>
+        </form>
+
+    </div>
+</div>
