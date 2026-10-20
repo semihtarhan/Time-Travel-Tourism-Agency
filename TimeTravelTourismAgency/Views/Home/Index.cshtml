@@ -164,108 +164,112 @@
     </div>
 </div>
 
-@section Scripts {
-<script>
-    let selectedDestId = null;
-    let quickModal = null;
+    @section Scripts {
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                let selectedDestId = null;
+                let destTitle = '';
+                let destPrice = 0;
 
-    function openBookingModal(id, title, price) {
-        selectedDestId = id;
-        document.getElementById('modalDestinationTitle').innerText = title + " Seyahati";
-        document.getElementById('modalPrice').innerText = Number(price).toLocaleString('tr-TR');
-        
-        // Formu her açılışta sıfırla (Eski mesajlar kalmasın)
-        document.getElementById('bookingAlertMessage').className = 'alert d-none mb-0';
-        document.getElementById('bookingFormArea').classList.remove('d-none');
-        
-        const btnSubmit = document.getElementById('btnSubmit');
-        btnSubmit.classList.remove('d-none');
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = 'Onayla & Satın Al';
-        
-        const btnCancel = document.getElementById('btnCancel');
-        btnCancel.innerText = 'İptal';
-        btnCancel.className = 'btn btn-outline-secondary rounded-pill';
-        
-        if (!quickModal) {
-            quickModal = new bootstrap.Modal(document.getElementById('quickBookingModal'));
-        }
-        quickModal.show();
+                // Modal yerine butona basıldığında verileri hafızada tutup doğrudan SweetAlert açabiliriz
+                // Veya mevcut Bootstrap modalinin içindekileri doldurmak yerine direkt Swal.fire tetikleyebiliriz.
+                // İstediğin tam olarak ilk script gibi olması olduğu için Swal yapısına çevirdim:
+
+                function openBookingModal(id, title, price) {
+                    selectedDestId = id;
+                    destTitle = title;
+                    destPrice = price;
+
+                    // İlk scriptteki yapıya benzer şekilde rezervasyon formunu Swal HTML içine gömüyoruz
+                    Swal.fire({
+                        title: '<i class="bi bi-airplane me-2"></i>' + title + ' Seyahati',
+                        html: `
+                            <div class="text-center py-2" id="bookingFormArea">
+                                <div class="mb-3 text-start">
+                                    <label class="form-label text-secondary small">Müşteri ID</label>
+                                    <input type="number" id="swalCustomerId" class="form-control bg-dark border-secondary text-light rounded-3" placeholder="Müşteri ID giriniz">
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label text-secondary small">Yolcu Sayısı</label>
+                                    <input type="number" id="swalPassengerCount" class="form-control bg-dark border-secondary text-light rounded-3" value="1" min="1">
+                                </div>
+                                <div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto mt-3">
+                                    <span class="text-secondary small d-block mb-1">Birim Fiyat</span>
+                                    <span class="fs-4 fw-bold text-success">${Number(price).toLocaleString('tr-TR')} ₺</span>
+                                </div>
+                                <div id="swalAlertBox" class="alert d-none mt-3 mb-0"></div>
+                            </div>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Onayla & Satın Al',
+                        cancelButtonText: 'İptal',
+                        buttonsStyling: false,
+                        customClass: {
+                            popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+                            confirmButton: 'btn btn-success rounded-pill px-4 me-2',
+                            cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
+                        },
+                        background: '#161b22',
+                        color: '#e6edf3',
+                        preConfirm: async () => {
+                            const customerId = parseInt(document.getElementById('swalCustomerId').value);
+                            const passengerCount = parseInt(document.getElementById('swalPassengerCount').value);
+                            const alertBox = document.getElementById('swalAlertBox');
+
+                            if (!customerId || !passengerCount) {
+                                Swal.showValidationMessage('Lütfen tüm alanları doldurun.');
+                                return false;
+                            }
+
+                            try {
+                                const response = await fetch('/api/Bookings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        customerId: customerId,
+                                        timeDestinationId: parseInt(selectedDestId),
+                                        passengerCount: passengerCount
+                                    })
+                                });
+
+                                if (!response.ok) {
+                                    const err = await response.json();
+                                    throw new Error(err.message || "Rezervasyon yapılamadı.");
+                                }
+
+                                return await response.json();
+                            } catch (error) {
+                                Swal.showValidationMessage(`Hata: ${error.message}`);
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            const data = result.value;
+
+                            // İlk scriptindeki gibi işlem başarılı olunca gelen animasyonlu başarı popup'ı
+                            Swal.fire({
+                                title: 'Rezervasyon Onaylandı!',
+                                html: `
+                                    <p class="text-secondary mb-3">Zaman sıçraması için koltuklarınız başarıyla ayrıldı.</p>
+                                    <div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto" style="max-width: 250px;">
+                                        <span class="text-secondary small d-block mb-1">Toplam Tutar</span>
+                                        <span class="fs-3 fw-bold text-success">${data.totalPrice.toLocaleString('tr-TR')} ₺</span>
+                                    </div>
+                                `,
+                                icon: 'success',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Kapat',
+                                buttonsStyling: false,
+                                customClass: {
+                                    popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+                                    confirmButton: 'btn btn-outline-light rounded-pill px-4'
+                                },
+                                background: '#161b22',
+                                color: '#e6edf3'
+                            });
+                        }
+                    });
+                }
+            </script>
     }
-
-    async function submitQuickBooking() {
-        const customerId = parseInt(document.getElementById('bookingCustomerId').value);
-        const passengerCount = parseInt(document.getElementById('bookingPassengerCount').value);
-        const alertBox = document.getElementById('bookingAlertMessage');
-        const formArea = document.getElementById('bookingFormArea');
-        const btnSubmit = document.getElementById('btnSubmit');
-        const btnCancel = document.getElementById('btnCancel');
-
-        alertBox.className = 'alert d-none mb-0';
-
-        if (!customerId || !passengerCount) {
-            alertBox.className = 'alert alert-warning mb-3';
-            alertBox.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Lütfen tüm alanları doldurun.';
-            return;
-        }
-
-        // Kullanıcı beklerken butonu disable yapıp animasyon ekleyelim
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>İşleniyor...';
-
-        try {
-            const response = await fetch('/api/Bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    customerId: customerId,
-                    timeDestinationId: parseInt(selectedDestId),
-                    passengerCount: passengerCount
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                
-                // Form alanını gizle ve başarı mesajını göster
-                formArea.classList.add('d-none');
-                alertBox.className = 'alert border-0 mb-0';
-                alertBox.style.backgroundColor = 'transparent'; // Modalın kendi rengiyle bütünleşsin
-                
-                alertBox.innerHTML = `
-                    <div class="text-center py-4 animate-success">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle mb-3 shadow-lg" style="width: 80px; height: 80px;">
-                            <i class="bi bi-check-lg" style="font-size: 3rem;"></i>
-                        </div>
-                        <h4 class="fw-bold text-light mb-2">Rezervasyon Onaylandı!</h4>
-                        <p class="text-secondary mb-4">Zaman sıçraması için koltuklarınız başarıyla ayrıldı.</p>
-                        
-                        <div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto" style="max-width: 250px;">
-                            <span class="text-secondary small d-block mb-1">Toplam Tutar</span>
-                            <span class="fs-3 fw-bold text-success">${data.totalPrice.toLocaleString('tr-TR')} ₺</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Butonları güncelle
-                btnSubmit.classList.add('d-none');
-                btnCancel.innerText = 'Kapat';
-                btnCancel.className = 'btn btn-outline-light rounded-pill px-4';
-                
-            } else {
-                const err = await response.json();
-                alertBox.className = 'alert alert-danger mb-3';
-                alertBox.innerHTML = `<i class="bi bi-x-circle me-2"></i>Hata: ${err.message || "Rezervasyon yapılamadı."}`;
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = 'Onayla & Satın Al';
-            }
-        } catch (e) {
-            alertBox.className = 'alert alert-danger mb-3';
-            alertBox.innerHTML = '<i class="bi bi-wifi-off me-2"></i>Sunucuya bağlanırken bir sorun oluştu.';
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = 'Onayla & Satın Al';
-        }
-    }
-</script>
-}
 }
