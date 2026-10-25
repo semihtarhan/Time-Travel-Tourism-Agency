@@ -70,4 +70,17 @@ public class CustomerService : ICustomerService
             Phone = customer.Phone
         };
     }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var customer = await _context.Customers.FindAsync(id);
+        if (customer == null)
+        {
+            return false; // Müşteri bulunamadı
+        }
+
+        _context.Customers.Remove(customer);
+        await _context.SaveChangesAsync();
+        return true; // Başarıyla silindi
+    }
 }

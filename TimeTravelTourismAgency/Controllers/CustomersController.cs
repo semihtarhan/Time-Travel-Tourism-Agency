@@ -39,4 +39,14 @@ public class CustomersController : ControllerBase
         var created = await _customerService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var success = await _customerService.DeleteAsync(id); // Servisteki silme metodun (adını kendi servisine göre kontrol edebilirsin)
+        if (!success)
+            return NotFound(new { message = "Müşteri bulunamadı." });
+
+        return NoContent(); // Başarılı silme durumunda 204 döner
+    }
 }

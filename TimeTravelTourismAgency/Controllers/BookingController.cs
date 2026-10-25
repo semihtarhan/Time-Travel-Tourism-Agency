@@ -47,4 +47,15 @@ public class BookingsController : ControllerBase
         if (!success) return NotFound(new { message = "Rezervasyon bulunamadı." });
         return NoContent();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // Serviste tanımlı olan doğru metot adını kullanıyoruz (Örn: CancelBookingAsync)
+        var success = await _bookingService.CancelBookingAsync(id);
+        if (!success)
+            return NotFound(new { message = "Rezervasyon bulunamadı." });
+
+        return NoContent(); // Başarılı silme durumunda 204 döner
+    }
 }

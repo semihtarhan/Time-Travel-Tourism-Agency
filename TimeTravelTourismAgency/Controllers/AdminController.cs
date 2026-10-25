@@ -18,14 +18,18 @@ namespace TimeTravelTourismAgency.Controllers
         public async Task<IActionResult> Index()
         {
             var totalDestinations = await _context.TimeDestinations.CountAsync();
-            var totalBookings = await _context.Bookings.CountAsync();
             var totalCustomers = await _context.Customers.CountAsync();
 
-            // Toplam Ciro Hesaplama
+            // Sadece onaylı olan rezervasyonları filtreliyoruz
+            var confirmedBookingsQuery = _context.Bookings.Where(b => b.Status == "Confirmed");
+
+            var totalBookings = await confirmedBookingsQuery.CountAsync();
+
+            // Toplam Ciro Hesaplama (Sadece onaylı rezervasyonlar üzerinden)
             decimal totalRevenue = 0;
             if (totalBookings > 0)
             {
-                totalRevenue = await _context.Bookings
+                totalRevenue = await confirmedBookingsQuery
                     .Include(b => b.TimeDestination)
                     .SumAsync(b => b.PassengerCount * (b.TimeDestination != null ? b.TimeDestination.Price : 0));
             }
