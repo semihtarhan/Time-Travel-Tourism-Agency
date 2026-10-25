@@ -83,8 +83,8 @@
                                 <td class="text-end pe-4">
                                     @if (item.Status == "Confirmed")
                                     {
-                                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="cancelBooking(@item.Id)">
-                                            İptal Et
+                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="confirmCancelReservation(@item.Id)">
+                                            <i class="bi bi-x-circle me-1"></i>İptal Et
                                         </button>
                                     }
                                     else
@@ -102,26 +102,72 @@
 </div>
 
 @section Scripts {
-<script>
-    async function cancelBooking(id) {
-        if (!confirm(`#${id} numaralı rezervasyonu iptal etmek istediğinize emin misiniz?`)) {
-            return;
-        }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmCancelReservation(id) {
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
 
-        try {
-            const response = await fetch(`/api/Bookings/${id}/cancel`, {
-                method: 'PUT'
+            Swal.fire({
+                title: '<i class="bi bi-hourglass-split me-2 text-primary"></i>Rezervasyon İptali',
+                html: `
+                    <div class="text-center py-2">
+                        <div class="mb-3 text-warning">
+                            <i class="bi bi-exclamation-triangle fs-1"></i>
+                        </div>
+                        <h5 class="${isDark ? 'text-light' : 'text-dark'} mb-2">Rezervasyonu İptal Etmek İstediğinize Emin Misiniz?</h5>
+                        <p class="text-secondary small">#${id} numaralı zaman sıçraması rezervasyonu iptal edilecek.</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Evet, İptal Et',
+                cancelButtonText: 'Vazgeç',
+                buttonsStyling: false,
+                customClass: {
+                    popup: (isDark ? 'bg-dark border border-secondary text-light' : 'bg-white border text-dark') + ' rounded-4 p-4 shadow-lg',
+                    confirmButton: 'btn btn-danger rounded-pill px-4 me-2',
+                    cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
+                },
+                background: isDark ? '#161b22' : '#ffffff',
+                color: isDark ? '#e6edf3' : '#212529'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // API'ye PUT isteği atıyoruz
+                    fetch('/api/bookings/' + id + '/cancel', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            Swal.fire({
+                                title: 'İptal Edildi!',
+                                text: 'Rezervasyon başarıyla iptal edildi.',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false,
+                                background: isDark ? '#161b22' : '#ffffff',
+                                color: isDark ? '#e6edf3' : '#212529'
+                            });
+
+                            setTimeout(() => {
+                                location.reload(); // Sayfayı yenile
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: 'Hata!',
+                                text: 'Rezervasyon iptal edilirken bir sorun oluştu.',
+                                icon: 'error',
+                                background: isDark ? '#161b22' : '#ffffff',
+                                color: isDark ? '#e6edf3' : '#212529'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Hata:', error);
+                    });
+                }
             });
-
-            if (response.ok) {
-                alert("Rezervasyon başarıyla iptal edildi.");
-                location.reload();
-            } else {
-                alert("İptal işlemi sırasında bir hata oluştu.");
-            }
-        } catch (e) {
-            alert("Sunucuya bağlanılamadı.");
         }
-    }
-</script>
+    </script>
 }
