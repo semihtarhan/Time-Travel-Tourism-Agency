@@ -92,16 +92,36 @@
 								<i class="bi bi-compass me-1"></i>Zaman Rotaları
 							</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="Home" asp-action="Bookings">
-								<i class="bi bi-journal-bookmark me-1"></i>Rezervasyonlar
+						
+
+
+
+						<!-- Admin Paneli ve Alt Menüleri (Rezervasyonlar & Swagger) -->
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle fw-medium px-3 rounded text-primary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(13, 110, 253, 0.1); transition: background 0.2s;">
+								<i class="bi bi-speedometer2 me-1"></i>Admin Paneli
 							</a>
+							<ul class="dropdown-menu dropdown-menu-end shadow">
+								<li>
+									<a class="dropdown-item" asp-controller="Admin" asp-action="Index">
+										<i class="bi bi-sliders me-2"></i>Yönetim Paneli
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" asp-controller="Home" asp-action="Bookings">
+										<i class="bi bi-journal-bookmark me-2"></i>Rezervasyonlar
+									</a>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="/swagger" target="_blank">
+										<i class="bi bi-code-slash me-2"></i>Swagger API
+									</a>
+								</li>
+							</ul>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="Admin" asp-action="Index">
-								<i class="bi bi-speedometer2 me-1 text-primary"></i>Admin Paneli
-							</a>
-						</li>
+
+
 					</ul>
 					<ul class="navbar-nav ms-auto">
 						@* Kullanıcı Giriş Durumu Kontrolü *@
