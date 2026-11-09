@@ -49,5 +49,39 @@ namespace TimeTravelTourismAgency.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+
+        // --- ADMİN GİRİŞ İŞLEMLERİ ---
+
+        [HttpGet]
+        public IActionResult AdminLogin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AdminLogin(string username, string password)
+        {
+            var admin = _context.Admins.FirstOrDefault(a => a.Username == username && a.Password == password);
+
+            if (admin == null)
+            {
+                ViewBag.Error = "Geçersiz kullanıcı adı veya şifre.";
+                return View();
+            }
+
+            // Admin oturumunu başlatıyoruz
+            HttpContext.Session.SetInt32("AdminId", admin.Id);
+            HttpContext.Session.SetString("AdminName", admin.Username);
+
+            return RedirectToAction("Index", "Admin");
+        }
+
+        public IActionResult AdminLogout()
+        {
+            HttpContext.Session.Remove("AdminId");
+            HttpContext.Session.Remove("AdminName");
+            return RedirectToAction("AdminLogin", "Auth");
+        }
     }
 }

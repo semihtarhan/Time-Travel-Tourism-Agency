@@ -13,66 +13,52 @@
 	<link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/hourglass-split.svg" />
 
 	<style>
-				@@keyframes successPop {
-						0%
-
-		{
-			transform: scale(0.5);
-			opacity: 0;
-		}
-
-					70% {
-			transform: scale(1.1);
-			opacity: 1;
-		}
-
-					100% {
-			transform: scale(1);
-			opacity: 1;
-		}
-
-
-		}
-
-				.animate-success {
-						animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-
-		}
-
-					body {
-							background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-							min-height: 100vh;
-							color: #e6edf3;
-
-		}
-
-					.navbar {
-							background: rgba(22, 27, 34, 0.85) !important;
-							backdrop-filter: blur(10px);
-							border-bottom: 1px solid #30363d;
-
-		}
-
-					.card-destination {
-							background-color: #161b22;
-							border: 1px solid #30363d;
-							transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-		}
-
-						.card-destination:hover {
-								transform: translateY(-5px);
-								box-shadow: 0 10px 20px rgba(13, 110, 253, 0.25);
-								border-color: #0d6efd;
-
+		@@keyframes successPop {
+			0% {
+				transform: scale(0.5);
+				opacity: 0;
 			}
-
-					footer {
-							border-color: #30363d !important;
-
+			70% {
+				transform: scale(1.1);
+				opacity: 1;
+			}
+			100% {
+				transform: scale(1);
+				opacity: 1;
+			}
 		}
 
+		.animate-success {
+			animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+		}
 
+		body {
+			background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+			min-height: 100vh;
+			color: #e6edf3;
+		}
+
+		.navbar {
+			background: rgba(22, 27, 34, 0.85) !important;
+			backdrop-filter: blur(10px);
+			border-bottom: 1px solid #30363d;
+		}
+
+		.card-destination {
+			background-color: #161b22;
+			border: 1px solid #30363d;
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.card-destination:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(13, 110, 253, 0.25);
+			border-color: #0d6efd;
+		}
+
+		footer {
+			border-color: #30363d !important;
+		}
 	</style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -86,77 +72,66 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
+					
+					<!-- 📍 SOL TARAF MENÜ LİSTESİ -->
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
 							<a class="nav-link" asp-controller="Home" asp-action="Index">
 								<i class="bi bi-compass me-1"></i>Zaman Rotaları
 							</a>
 						</li>
-						
-
-
-
-						<!-- Admin Paneli ve Alt Menüleri (Rezervasyonlar & Swagger) -->
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle fw-medium px-3 rounded text-primary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(13, 110, 253, 0.1); transition: background 0.2s;">
-								<i class="bi bi-speedometer2 me-1"></i>Admin Paneli
-							</a>
-							<ul class="dropdown-menu dropdown-menu-end shadow">
-								<li>
-									<a class="dropdown-item" asp-controller="Admin" asp-action="Index">
-										<i class="bi bi-sliders me-2"></i>Yönetim Paneli
-									</a>
-								</li>
-								<li>
-									<a class="dropdown-item" asp-controller="Home" asp-action="Bookings">
-										<i class="bi bi-journal-bookmark me-2"></i>Rezervasyonlar
-									</a>
-								</li>
-								<li><hr class="dropdown-divider"></li>
-								<li>
-									<a class="dropdown-item" href="/swagger" target="_blank">
-										<i class="bi bi-code-slash me-2"></i>Swagger API
-									</a>
-								</li>
-							</ul>
-						</li>
-
-
 					</ul>
+
+					<!-- 🚀 SAĞ TARAF OTURUM DURUMU LİSTESİ 🚀 -->
 					<ul class="navbar-nav ms-auto">
-						@* Kullanıcı Giriş Durumu Kontrolü *@
-    @if (Context.Session.GetInt32("CustomerId") != null)
-    {
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle btn btn-outline-primary btn-sm px-3 text-light rounded-pill d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-person-check-fill text-success"></i>
-                <span>@Context.Session.GetString("CustomerName")</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark border-secondary shadow">
-                <li>
-                    <span class="dropdown-item-text text-secondary small">
-                        Müşteri ID: #@Context.Session.GetInt32("CustomerId")
-                    </span>
-                </li>
-                <li><hr class="dropdown-divider border-secondary"></li>
-                <li>
-                    <a class="dropdown-item text-danger d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Logout">
-                        <i class="bi bi-box-arrow-right"></i> Çıkış Yap
-                    </a>
-                </li>
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="btn btn-primary btn-sm px-3 rounded-pill d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Login">
-                <i class="bi bi-box-arrow-in-right"></i>
-                <span>Giriş Yap</span>
-            </a>
-        </li>
-    }
+						@* 👑 1. DURUM: Eğer ADMIN giriş yaptıysa *@
+						@if (Context.Session.GetString("AdminName") != null)
+						{
+							<li class="nav-item d-flex align-items-center gap-2">
+								<span class="text-danger fw-semibold small px-3 py-1 bg-danger bg-opacity-10 border border-danger border-opacity-25 rounded-pill">
+									<i class="bi bi-shield-check me-1"></i> Admin (@Context.Session.GetString("AdminUser"))
+								</span>
+								<a class="btn btn-outline-danger btn-sm px-3 rounded-pill d-flex align-items-center gap-1" asp-controller="Auth" asp-action="AdminLogout">
+									<i class="bi bi-box-arrow-right"></i> Çıkış Yap
+								</a>
+							</li>
+						}
+						@* 👤 2. DURUM: Eğer NORMAL MÜŞTERİ giriş yaptıysa *@
+						else if (Context.Session.GetInt32("CustomerId") != null)
+						{
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle btn btn-outline-primary btn-sm px-3 text-light rounded-pill d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="bi bi-person-check-fill text-success"></i>
+									<span>@Context.Session.GetString("CustomerName")</span>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark border-secondary shadow">
+									<li>
+										<span class="dropdown-item-text text-secondary small">
+											Müşteri ID: #@Context.Session.GetInt32("CustomerId")
+										</span>
+									</li>
+									<li><hr class="dropdown-divider border-secondary"></li>
+									<li>
+										<a class="dropdown-item text-danger d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Logout">
+											<i class="bi bi-box-arrow-right"></i> Çıkış Yap
+										</a>
+									</li>
+								</ul>
+							</li>
+						}
+						@* 🚪 3. DURUM: Kimse giriş yapmadıysa *@
+						else
+						{
+							<li class="nav-item">
+								<a class="btn btn-primary btn-sm px-3 rounded-pill d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Login">
+									<i class="bi bi-box-arrow-in-right"></i>
+									<span>Giriş Yap</span>
+								</a>
+							</li>
+						}
 					</ul>
+					<!-- 🚀 SAĞ TARAF BİTİŞİ 🚀 -->
+
 				</div>
 			</div>
 		</nav>

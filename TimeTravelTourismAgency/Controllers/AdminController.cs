@@ -17,6 +17,13 @@ namespace TimeTravelTourismAgency.Controllers
         // Admin Dashboard Ana Sayfası & İstatistikler
         public async Task<IActionResult> Index()
         {
+
+            // 🔒 GÜVENLİK KALKANI: Admin oturumu var mı kontrol et, yoksa login sayfasına şutla!
+            if (HttpContext.Session.GetString("AdminName") == null)
+            {
+                return RedirectToAction("AdminLogin", "Auth");
+            }
+
             var totalDestinations = await _context.TimeDestinations.CountAsync();
             var totalCustomers = await _context.Customers.CountAsync();
 
