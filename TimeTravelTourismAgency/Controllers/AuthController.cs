@@ -37,7 +37,11 @@ namespace TimeTravelTourismAgency.Controllers
                 return View(model);
             }
 
-            // Oturuma ID ve Tam Adı kaydediyoruz
+            // 🧹 GÜVENLİK TEMİZLİĞİ: Müşteri giriş yaparken açık bir admin oturumu varsa uçuruyoruz!
+            HttpContext.Session.Remove("AdminId");
+            HttpContext.Session.Remove("AdminName");
+
+            // Oturuma ID and Tam Adı kaydediyoruz
             HttpContext.Session.SetInt32("CustomerId", customer.Id);
             HttpContext.Session.SetString("CustomerName", $"{customer.FirstName} {customer.LastName}");
 
@@ -69,6 +73,10 @@ namespace TimeTravelTourismAgency.Controllers
                 ViewBag.Error = "Geçersiz kullanıcı adı veya şifre.";
                 return View();
             }
+
+            // 🧹 GÜVENLİK TEMİZLİĞİ: Admin giriş yaparken açık bir müşteri oturumu varsa kafasını koparıyoruz!
+            HttpContext.Session.Remove("CustomerId");
+            HttpContext.Session.Remove("CustomerName");
 
             // Admin oturumunu başlatıyoruz
             HttpContext.Session.SetInt32("AdminId", admin.Id);
