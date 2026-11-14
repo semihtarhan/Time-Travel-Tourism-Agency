@@ -117,6 +117,118 @@ namespace TimeTravelTourismAgency.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "ayse.kaya@gelecek.com",
+                            FirstName = "Ayşe",
+                            LastName = "Kaya",
+                            PassportNumber = "TR123456789",
+                            Password = "Password123*",
+                            Phone = "+905321112233"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "kaan.demir@paradoks.com",
+                            FirstName = "Kaan",
+                            LastName = "Demir",
+                            PassportNumber = "TR987654321",
+                            Password = "Time456*",
+                            Phone = "+905332223344"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "zeynep.celik@zamanagaci.com",
+                            FirstName = "Zeynep",
+                            LastName = "Çelik",
+                            PassportNumber = "TR555666777",
+                            Password = "Chrono789!",
+                            Phone = "+905553334455"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "can.ozkan@gecmis.net",
+                            FirstName = "Can",
+                            LastName = "Özkan",
+                            PassportNumber = "TR111222333",
+                            Password = "Kuantum2026!",
+                            Phone = "+905444445566"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "elif.yildiz@sonsuzluk.com",
+                            FirstName = "Elif",
+                            LastName = "Yıldız",
+                            PassportNumber = "TR999888777",
+                            Password = "Infinity99*",
+                            Phone = "+905305556677"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "burak.yilmaz@gmail.com",
+                            FirstName = "Burak",
+                            LastName = "Yılmaz",
+                            PassportNumber = "TR555111222",
+                            Password = "BurakPassword1*",
+                            Phone = "+905321234567"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "ceren.aydin@hotmail.com",
+                            FirstName = "Ceren",
+                            LastName = "Aydın",
+                            PassportNumber = "TR777888999",
+                            Password = "CerenTime2026!",
+                            Phone = "+905339876543"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "tolga.sahin@yahoo.com",
+                            FirstName = "Tolga",
+                            LastName = "Şahin",
+                            PassportNumber = "TR112233445",
+                            Password = "TolgaQuantum9^",
+                            Phone = "+905441112233"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "melis.koc@outlook.com",
+                            FirstName = "Melis",
+                            LastName = "Koç",
+                            PassportNumber = "TR998877665",
+                            Password = "MelisFuture5!",
+                            Phone = "+905556667788"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2026, 11, 14, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "ozan.tekin@icloud.com",
+                            FirstName = "Ozan",
+                            LastName = "Tekin",
+                            PassportNumber = "TR334455667",
+                            Password = "OzanHistory7*",
+                            Phone = "+905309998877"
+                        });
                 });
 
             modelBuilder.Entity("TimeTravelTourismAgency.Models.TimeDestination", b =>
