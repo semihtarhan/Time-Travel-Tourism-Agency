@@ -22,18 +22,19 @@ namespace TimeTravelTourismAgency.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Email))
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
             {
-                ViewBag.Error = "Lütfen e-posta adresinizi girin.";
+                ViewBag.Error = "Lütfen e-posta ve şifrenizi girin.";
                 return View(model);
             }
 
+            // 🔒 İŞTE BURASI: Artık hem e-posta hem de şifre veritabanıyla birebir eşleşmek ZORUNDA!
             var customer = _context.Customers
-                .FirstOrDefault(c => c.Email.ToLower() == model.Email.Trim().ToLower());
+                .FirstOrDefault(c => c.Email.ToLower() == model.Email.Trim().ToLower() && c.Password == model.Password);
 
             if (customer == null)
             {
-                ViewBag.Error = "Bu e-posta adresine kayıtlı müşteri bulunamadı.";
+                ViewBag.Error = "Geçersiz e-posta veya şifre.";
                 return View(model);
             }
 
