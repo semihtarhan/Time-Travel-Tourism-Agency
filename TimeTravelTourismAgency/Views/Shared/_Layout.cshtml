@@ -80,6 +80,13 @@
 								<i class="bi bi-compass me-1"></i>Zaman Rotaları
 							</a>
 						</li>
+						<!-- Eğer admin giriş yaptıysa sol üste Rezervasyonlar butonu koyalım -->
+						@if (Context.Session.GetString("AdminName") != null)
+						{
+							<a asp-controller="Home" asp-action="Bookings" class="btn btn-outline-secondary btn-sm px-3 rounded-pill d-flex align-items-center gap-1 text-light">
+								<i class="bi bi-journal-bookmark"></i> Rezervasyonlar
+							</a>
+						}
 					</ul>
 
 					<!-- 🚀 SAĞ TARAF OTURUM DURUMU LİSTESİ 🚀 -->
@@ -88,10 +95,12 @@
 						@if (Context.Session.GetString("AdminName") != null)
 						{
 							<li class="nav-item d-flex align-items-center gap-2">
-								<!-- Kesin tıklanabilmesi için href eklendi ve pointer-events garantiye alındı -->
+								<!-- Yönetim Paneli Linki -->
 								<a href="@Url.Action("Index", "Admin")" class="text-danger fw-semibold small px-3 py-1 bg-danger bg-opacity-10 border border-danger border-opacity-25 rounded-pill text-decoration-none" style="cursor: pointer; position: relative; z-index: 10;">
 									<i class="bi bi-shield-check me-1"></i> Admin (@Context.Session.GetString("AdminName"))
 								</a>
+
+								<!-- Çıkış Yap Butonu -->
 								<a class="btn btn-outline-danger btn-sm px-3 rounded-pill d-flex align-items-center gap-1" asp-controller="Auth" asp-action="AdminLogout">
 									<i class="bi bi-box-arrow-right"></i> Çıkış Yap
 								</a>

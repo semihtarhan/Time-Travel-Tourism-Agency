@@ -269,6 +269,128 @@ namespace TimeTravelTourismAgency.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TimeDestinations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacity = 15,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4073),
+                            DangerLevel = 3,
+                            Description = "Kolezyum'daki gladyatör dövüşlerini canlı izleyin ve Roma Senatosu'na tanıklık edin.",
+                            IsActive = true,
+                            Price = 12500m,
+                            TargetYear = "MS 80",
+                            Title = "Antik Roma"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacity = 10,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4080),
+                            DangerLevel = 1,
+                            Description = "Leonardo da Vinci ve Michelangelo'nun atölyelerini ziyaret edin, sanatın altın çağını yaşayın.",
+                            IsActive = true,
+                            Price = 18000m,
+                            TargetYear = "1504",
+                            Title = "Rönesans Floransa"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 8,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4081),
+                            DangerLevel = 5,
+                            Description = "Devasa dinozorların arasında, güvenli kuantum gözlem kubbemizden doğayı keşfedin.",
+                            IsActive = true,
+                            Price = 45000m,
+                            TargetYear = "MÖ 150 Milyon",
+                            Title = "Jura Devri"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 20,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4083),
+                            DangerLevel = 4,
+                            Description = "1453 yılında Fatih Sultan Mehmet'in akınlarına ve tarihi gemilerin karadan yürütülmesine tanık olun.",
+                            IsActive = true,
+                            Price = 15000m,
+                            TargetYear = "1453",
+                            Title = "İstanbul'un Fethi"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Capacity = 12,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4084),
+                            DangerLevel = 2,
+                            Description = "Sisli Londra sokaklarında at arabalarıyla gezinin ve Sherlock Holmes atmosferini soluyun.",
+                            IsActive = true,
+                            Price = 9500m,
+                            TargetYear = "1888",
+                            Title = "Viktorya Dönemi Londra"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Capacity = 6,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4086),
+                            DangerLevel = 2,
+                            Description = "Apollo 11'in fırlatılışını Kennedy Uzay Merkezi'nden en önde izleyin.",
+                            IsActive = true,
+                            Price = 35000m,
+                            TargetYear = "1969",
+                            Title = "Ay'a İlk Ayak Basılış"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Capacity = 14,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4087),
+                            DangerLevel = 2,
+                            Description = "İlk Olimpiyat oyunlarının düzenlendiği Olympos'ta tarihin sportmenlik ruhunu hissedin.",
+                            IsActive = true,
+                            Price = 11000m,
+                            TargetYear = "MÖ 776",
+                            Title = "Antik Yunan - Antik Olaylar"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Capacity = 10,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4088),
+                            DangerLevel = 4,
+                            Description = "Teksas kasabalarında dönemin atmosferini yaşayın, tüccarlar ve şeriflerle tanışın.",
+                            IsActive = true,
+                            Price = 13500m,
+                            TargetYear = "1875",
+                            Title = "Vahşi Batı"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4089),
+                            DangerLevel = 1,
+                            Description = "Yüzyıllar sonrasının uçan arabaları ve holografik gökdelenleriyle dolu metropolünü keşfedin.",
+                            IsActive = true,
+                            Price = 50000m,
+                            TargetYear = "3024",
+                            Title = "Kuantum Gelecek - Neo İstanbul"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Capacity = 12,
+                            CreatedAt = new DateTime(2026, 11, 15, 19, 46, 0, 470, DateTimeKind.Utc).AddTicks(4090),
+                            DangerLevel = 3,
+                            Description = "Babil'in Asma Bahçeleri'nin ihtişamını görün ve insanlık tarihinin ilk yazılı kanunlarına tanıklık edin.",
+                            IsActive = true,
+                            Price = 16000m,
+                            TargetYear = "MÖ 1750",
+                            Title = "Mezopotamya - Babil"
+                        });
                 });
 
             modelBuilder.Entity("TimeTravelTourismAgency.Models.Booking", b =>

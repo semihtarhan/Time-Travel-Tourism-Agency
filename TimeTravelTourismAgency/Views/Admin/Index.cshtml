@@ -99,13 +99,19 @@
                                 <td class="text-success fw-bold">@item.Price.ToString("N0") ₺</td>
                                 <td>@item.Capacity</td>
                                 <td>@item.DangerLevel / 5</td>
-                                <td class="text-end pe-4">
-                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="confirmDelete('@item.Id', '@item.Title')">
-                                        <i class="bi bi-trash me-1"></i>Sil
-                                    </button>
 
-                                    <!-- Gizli Silme Formu -->
-                                    <form id="delete-form-@item.Id" asp-action="DeleteDestination" asp-route-id="@item.Id" method="post" class="d-none"></form>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <!-- 🚀 YENİ: Sadece bu rotanın rezervasyonlarını gösteren buton -->
+                                        <a href="@Url.Action("Bookings", "Home", new { destinationId = item.Id })" class="btn btn-outline-info btn-sm rounded-pill px-3 text-decoration-none">
+                                            <i class="bi bi-journal-bookmark me-1"></i> Rezervasyonlar
+                                        </a>
+
+                                        <!-- Mevcut Sil Butonun -->
+                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="confirmDelete('@item.Id', '@item.Title')">
+                                            <i class="bi bi-trash me-1"></i> Sil
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -167,8 +173,9 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(id, title) {
-            Swal.fire({
+        // 1. Mevcut Silme Onay Fonksiyonun
+                async function confirmDelete(id, title) {
+            const result = await Swal.fire({
                 title: '<i class="bi bi-hourglass-split me-2"></i>' + title,
                 html: `
                     <div class="text-center py-2">
@@ -190,24 +197,113 @@
                 },
                 background: '#161b22',
                 color: '#e6edf3'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Silindi bildirimi gösterip formu gönderiyoruz
-                    Swal.fire({
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/api/TimeDestinations/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Rota silinemedi! Bu rotaya ait aktif veya geçmiş rezervasyonlar olabilir.");
+                    }
+
+                    await Swal.fire({
                         title: 'Silindi!',
                         text: 'Zaman rotası başarıyla silindi.',
                         icon: 'success',
-                        timer: 1500,
+                        timer: 1200,
                         showConfirmButton: false,
                         background: '#161b22',
                         color: '#e6edf3'
                     });
 
-                    setTimeout(() => {
-                        document.getElementById('delete-form-' + id).submit();
-                    }, 1000);
+                    location.reload(); // Sayfayı yenileyerek güncel listeyi getirir
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Silinemedi!',
+                        text: error.message,
+                        icon: 'error',
+                        background: '#161b22',
+                        color: '#e6edf3'
+                    });
+                }
+            }
+        }
+
+        // 🚀 2. YENİ: Sadece tıklanan rotaya ait rezervasyonları gösteren fonksiyon
+        async function showDestinationBookings(destinationId, destinationTitle) {
+            Swal.fire({
+                title: 'Yükleniyor...',
+                text: destinationTitle + ' rezervasyonları getiriliyor.',
+                allowOutsideClick: false,
+                background: '#161b22',
+                color: '#e6edf3',
+                didOpen: () => {
+                    Swal.showLoading();
                 }
             });
+
+            try {
+                const response = await fetch('/api/Bookings');
+                if (!response.ok) throw new Error('Rezervasyonlar alınamadı.');
+
+                const allBookings = await response.json();
+
+                // Sadece seçilen rotanın ID'sine sahip rezervasyonları filtrele
+                const filtered = allBookings.filter(b => b.timeDestinationId == destinationId);
+
+                let htmlContent = '';
+                if (filtered.length === 0) {
+                    htmlContent = `<p class="text-secondary my-3">Bu rota için henüz kayıtlı bir rezervasyon bulunmuyor.</p>`;
+                } else {
+                    htmlContent = `
+                        <div class="table-responsive text-start mt-3">
+                            <table class="table table-dark table-sm table-borderless align-middle mb-0">
+                                <thead class="border-bottom border-secondary text-secondary small">
+                                    <tr>
+                                        <th>Müşteri ID</th>
+                                        <th>Yolcu Sayısı</th>
+                                        <th class="text-end">Toplam Tutar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${filtered.map(b => `
+                                        <tr class="border-bottom border-secondary-subtle">
+                                            <td>Müşteri #${b.customerId}</td>
+                                            <td>${b.passengerCount} Kişi</td>
+                                            <td class="text-end text-success fw-semibold">${Number(b.totalPrice).toLocaleString('tr-TR')} ₺</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+
+                Swal.fire({
+                    title: `<i class="bi bi-journal-bookmark text-info me-2"></i>${destinationTitle} Rezervasyonları`,
+                    html: htmlContent,
+                    confirmButtonText: 'Kapat',
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+                        confirmButton: 'btn btn-outline-light rounded-pill px-4 mt-2'
+                    },
+                    background: '#161b22',
+                    color: '#e6edf3'
+                });
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: error.message,
+                    background: '#161b22',
+                    color: '#e6edf3'
+                });
+            }
         }
     </script>
 }

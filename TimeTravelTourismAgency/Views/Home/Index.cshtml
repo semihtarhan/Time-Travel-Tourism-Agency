@@ -120,7 +120,7 @@
 								{
 									<button type="button"
 											class="btn btn-outline-primary w-100 rounded-pill py-2 fw-semibold"
-											onclick="openBookingModal('@item.Id', '@item.Title', '@item.Price', '@customerIdSession', '@customerNameSession')">
+											onclick="openBookingModal('@item.Id', '@item.Title', @item.Price.ToString(System.Globalization.CultureInfo.InvariantCulture), '@customerIdSession', '@customerNameSession')">
 										<i class="bi bi-ticket-perforated me-2"></i>Bilet Al
 									</button>
 								}

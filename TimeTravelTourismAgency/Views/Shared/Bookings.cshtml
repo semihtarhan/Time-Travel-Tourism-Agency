@@ -9,13 +9,19 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-light mb-1">
-                <i class="bi bi-journal-bookmark text-primary me-2"></i>Zaman Seyahati Rezervasyonları
+                <i class="bi bi-journal-bookmark text-primary me-2"></i><span id="pageTitle">Zaman Seyahati Rezervasyonları</span>
             </h2>
             <p class="text-secondary mb-0">Tüm zaman sıçraması biletleri ve yolcu kayıtları.</p>
         </div>
-        <a asp-action="Index" class="btn btn-outline-primary rounded-pill px-3">
-            <i class="bi bi-plus-lg me-1"></i>Yeni Bilet Kes
-        </a>
+        <div class="d-flex gap-2">
+            <!-- Tümünü Göster Butonu (Filtreyi Temizlemek İçin) -->
+            <a id="btnClearFilter" href="/Home/Bookings" class="btn btn-outline-secondary rounded-pill px-3 d-none">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Tümünü Göster
+            </a>
+            <a asp-action="Index" class="btn btn-outline-primary rounded-pill px-3">
+                <i class="bi bi-plus-lg me-1"></i>Yeni Bilet Kes
+            </a>
+        </div>
     </div>
 
     @if (!Model.Any())
@@ -30,7 +36,7 @@
     {
         <div class="card bg-dark border border-secondary-subtle rounded-4 overflow-hidden shadow">
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle mb-0">
+                <table class="table table-dark table-hover align-middle mb-0" id="bookingsTable">
                     <thead class="table-secondary text-uppercase small border-bottom border-secondary">
                         <tr>
                             <th class="ps-4">Rezervasyon No</th>
@@ -46,14 +52,15 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
+                            // 🚀 JavaScript tarafında filtreleyebilmek için satırlara data-destination-id ekliyoruz
+                            <tr data-destination-id="@item.TimeDestinationId">
                                 <td class="ps-4 fw-bold text-primary">#@item.Id</td>
                                 <td>
                                     <div class="fw-semibold text-light">@item.CustomerName</div>
                                     <div class="text-secondary small">Müşteri ID: @item.CustomerId</div>
                                 </td>
                                 <td>
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 destination-title">
                                         <i class="bi bi-geo-alt me-1"></i>@item.DestinationTitle
                                     </span>
                                 </td>
@@ -104,6 +111,39 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // 🚀 SAYFA YÜKLENDİĞİNDE URL'DE DESTINATIONID VARSA TABLOYU FİLTRELE
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const destinationId = urlParams.get('destinationId');
+
+            if (destinationId) {
+                const rows = document.querySelectorAll("#bookingsTable tbody tr");
+                let visibleCount = 0;
+                let destName = "";
+
+                rows.forEach(row => {
+                    const rowDestId = row.getAttribute("data-destination-id");
+                    if (rowDestId === destinationId) {
+                        row.style.display = "";
+                        visibleCount++;
+                        // Rota başlığını yakalayalım
+                        const titleBadge = row.querySelector(".destination-title");
+                        if (titleBadge && !destName) {
+                            destName = titleBadge.textContent.trim();
+                        }
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+
+                // Başlığı güncelleyip "Tümünü Göster" butonunu görünür yapalım
+                if (destName) {
+                    document.getElementById("pageTitle").textContent = `${destName} Rezervasyonları`;
+                }
+                document.getElementById("btnClearFilter").classList.remove("d-none");
+            }
+        });
+
         function confirmCancelReservation(id) {
             const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
 
@@ -131,7 +171,6 @@
                 color: isDark ? '#e6edf3' : '#212529'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // API'ye PUT isteği atıyoruz
                     fetch('/api/bookings/' + id + '/cancel', {
                         method: 'PUT',
                         headers: {
@@ -151,7 +190,7 @@
                             });
 
                             setTimeout(() => {
-                                location.reload(); // Sayfayı yenile
+                                location.reload();
                             }, 1000);
                         } else {
                             Swal.fire({
