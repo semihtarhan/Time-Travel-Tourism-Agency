@@ -2,277 +2,266 @@
 @model IEnumerable<TimeDestinationDto>
 
 @{
-    ViewData["Title"] = "Ana Sayfa";
+	ViewData["Title"] = "Ana Sayfa";
+	var customerIdSession = Context.Session.GetInt32("CustomerId");
+	var customerNameSession = Context.Session.GetString("CustomerName");
 }
 
 <!-- Memories Hero / Tanıtım Bölümü -->
 <div class="row align-items-center py-5 my-3">
-    <div class="col-lg-7 text-center text-lg-start">
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary border border-primary-subtle mb-3">
-            <i class="bi bi-stars"></i>
-            <span class="small fw-semibold">Zamanda Kaybolmak Hiç Bu Kadar Güvenli Olmamıştı</span>
-        </div>
-        <h1 class="display-3 fw-bold text-light mb-3">
-            Geçmişi Yaşa,<br /><span class="text-primary">Geleceği Hatırla.</span>
-        </h1>
-        <p class="lead text-secondary mb-4">
-            <strong>Memories</strong> ile tarihin kırılma anlarına ilk elden tanıklık edin veya yüzyıllar sonrasının dünyasını keşfedin. Zaman kapsülünüz kalkışa hazır.
-        </p>
-        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-            <a href="#destinations" class="btn btn-primary btn-lg rounded-pill px-4 shadow">
-                <i class="bi bi-compass me-2"></i>Rotaları İncele
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-5 d-none d-lg-block text-center">
-        <div class="p-4 border border-secondary-subtle rounded-4 bg-dark bg-opacity-50 shadow-lg">
-            <div class="display-1 text-primary mb-2">
-                <i class="bi bi-hourglass-split"></i>
-            </div>
-            <h4 class="text-light fw-bold">Memories Chrono-Engine</h4>
-            <p class="text-secondary small mb-3">Kuantum kırılma koruması ve anlık zamansal geri dönüş garantisi.</p>
+	<div class="col-lg-7 text-center text-lg-start">
+		<div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary border border-primary-subtle mb-3">
+			<i class="bi bi-stars"></i>
+			<span class="small fw-semibold">Zamanda Kaybolmak Hiç Bu Kadar Güvenli Olmamıştı</span>
+		</div>
+		<h1 class="display-3 fw-bold text-light mb-3">
+			Geçmişi Yaşa,<br /><span class="text-primary">Geleceği Hatırla.</span>
+		</h1>
+		<p class="lead text-secondary mb-4">
+			<strong>Memories</strong> ile tarihin kırılma anlarına ilk elden tanıklık edin veya yüzyıllar sonrasının dünyasını keşfedin. Zaman kapsülünüz kalkışa hazır.
+		</p>
+		<div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+			<a href="#destinations" class="btn btn-primary btn-lg rounded-pill px-4 shadow">
+				<i class="bi bi-compass me-2"></i>Rotaları İncele
+			</a>
+		</div>
+	</div>
+	<div class="col-lg-5 d-none d-lg-block text-center">
+		<div class="p-4 border border-secondary-subtle rounded-4 bg-dark bg-opacity-50 shadow-lg">
+			<div class="display-1 text-primary mb-2">
+				<i class="bi bi-hourglass-split"></i>
+			</div>
+			<h4 class="text-light fw-bold">Memories Chrono-Engine</h4>
+			<p class="text-secondary small mb-3">Kuantum kırılma koruması ve anlık zamansal geri dönüş garantisi.</p>
 
-
-
-            <div class="row text-center pt-3 border-top border-secondary-subtle">
-                <div class="col-6">
-                    <div class="fs-4 fw-bold text-light">@Model.Count()</div>
-                    <div class="text-secondary small">Aktif Rota</div>
-                </div>
-                <div class="col-6">
-                    <div class="fs-4 fw-bold text-success">%100</div>
-                    <div class="text-secondary small">Zaman Tutarlılığı</div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
+			<div class="row text-center pt-3 border-top border-secondary-subtle">
+				<div class="col-6">
+					<div class="fs-4 fw-bold text-light">@Model.Count()</div>
+					<div class="text-secondary small">Aktif Rota</div>
+				</div>
+				<div class="col-6">
+					<div class="fs-4 fw-bold text-success">%100</div>
+					<div class="text-secondary small">Zaman Tutarlılığı</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- Rotalar Bölümü -->
 <div id="destinations" class="pt-5">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
-        <div>
-            <h2 class="fw-bold text-light mb-1">Popüler Zaman Rotaları</h2>
-            <p class="text-secondary mb-0">Ziyaret etmek istediğiniz çağı seçin ve yerinizi ayırtın.</p>
-        </div>
-        <div class="text-secondary small mt-2 mt-md-0">
-            Toplam <span class="badge bg-secondary">@Model.Count()</span> destinasyon listeleniyor
-        </div>
-    </div>
+	<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
+		<div>
+			<h2 class="fw-bold text-light mb-1">Popüler Zaman Rotaları</h2>
+			<p class="text-secondary mb-0">Ziyaret etmek istediğiniz çağı seçin ve yerinizi ayırtın.</p>
+		</div>
+		<div class="text-secondary small mt-2 mt-md-0">
+			Toplam <span class="badge bg-secondary">@Model.Count()</span> destinasyon listeleniyor
+		</div>
+	</div>
 
-    @if (!Model.Any())
-    {
-        <div class="text-center py-5 border border-secondary-subtle rounded-4 bg-dark bg-opacity-25">
-            <i class="bi bi-clock-history fs-1 text-secondary"></i>
-            <h5 class="text-light mt-3">Henüz Rota Tanımlanmadı</h5>
-            <p class="text-secondary small">Swagger üzerinden <code>POST /api/TimeDestinations</code> ile ilk rotanızı ekleyebilirsiniz.</p>
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var item in Model)
-            {
-                <div class="col">
-                    <div class="card card-destination h-100 rounded-4 p-2">
-                        <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
-                                    <i class="bi bi-calendar3 me-1"></i> @item.TargetYear
-                                </span>
+	@if (!Model.Any())
+	{
+		<div class="text-center py-5 border border-secondary-subtle rounded-4 bg-dark bg-opacity-25">
+			<i class="bi bi-clock-history fs-1 text-secondary"></i>
+			<h5 class="text-light mt-3">Henüz Rota Tanımlanmadı</h5>
+			<p class="text-secondary small">Swagger üzerinden <code>POST /api/TimeDestinations</code> ile ilk rotanızı ekleyebilirsiniz.</p>
+		</div>
+	}
+	else
+	{
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+			@foreach (var item in Model)
+			{
+				<div class="col">
+					<div class="card card-destination h-100 rounded-4 p-2">
+						<div class="card-body d-flex flex-column">
+							<div class="d-flex justify-content-between align-items-center mb-3">
+								<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+									<i class="bi bi-calendar3 me-1"></i> @item.TargetYear
+								</span>
 
-                                @if (item.DangerLevel <= 2)
-                                {
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-shield-check me-1"></i>Düşük Risk (@item.DangerLevel/5)
-                                    </span>
-                                }
-                                else if (item.DangerLevel == 3)
-                                {
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-shield-exclamation me-1"></i>Orta Risk (@item.DangerLevel/5)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill small">
-                                        <i class="bi bi-exclamation-triangle me-1"></i>Yüksek Risk (@item.DangerLevel/5)
-                                    </span>
-                                }
-                            </div>
+								@if (item.DangerLevel <= 2)
+								{
+									<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
+										<i class="bi bi-shield-check me-1"></i>Düşük Risk (@item.DangerLevel/5)
+									</span>
+								}
+								else if (item.DangerLevel == 3)
+								{
+									<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill small">
+										<i class="bi bi-shield-exclamation me-1"></i>Orta Risk (@item.DangerLevel/5)
+									</span>
+								}
+								else
+								{
+									<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill small">
+										<i class="bi bi-exclamation-triangle me-1"></i>Yüksek Risk (@item.DangerLevel/5)
+									</span>
+								}
+							</div>
 
-                            <h4 class="card-title text-light fw-bold">@item.Title</h4>
-                            <p class="card-text text-secondary flex-grow-1">
-                                @item.Description
-                            </p>
+							<h4 class="card-title text-light fw-bold">@item.Title</h4>
+							<p class="card-text text-secondary flex-grow-1">
+								@item.Description
+							</p>
 
-                            <div class="border-top border-secondary-subtle pt-3 mt-3">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-secondary small">
-                                        <i class="bi bi-people me-1"></i> Kontenjan: <strong class="text-light">@item.Capacity</strong>
-                                    </span>
-                                    <span class="fs-4 fw-bold text-light">
-                                        @item.Price.ToString("N0") <span class="fs-6 text-secondary fw-normal">₺</span>
-                                    </span>
-                                </div>
+							<div class="border-top border-secondary-subtle pt-3 mt-3">
+								<div class="d-flex justify-content-between align-items-center mb-3">
+									<span class="text-secondary small">
+										<i class="bi bi-people me-1"></i> Kontenjan: <strong class="text-light">@item.Capacity</strong>
+									</span>
+									<span class="fs-4 fw-bold text-light">
+										@item.Price.ToString("N0") <span class="fs-6 text-secondary fw-normal">₺</span>
+									</span>
+								</div>
 
-                                <button type="button" 
-                                        class="btn btn-outline-primary w-100 rounded-pill py-2 fw-semibold"
-                                        onclick="openBookingModal('@item.Id', '@item.Title', '@item.Price')">
-                                    <i class="bi bi-ticket-perforated me-2"></i>Bilet Al
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
-<!-- Rezervasyon Popup Modalı -->
-<div class="modal fade" id="quickBookingModal" tabindex="-1" aria-labelledby="quickBookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark border border-secondary">
-            <div class="modal-header border-secondary-subtle">
-                <h5 class="modal-title text-light" id="quickBookingModalLabel">
-                    <i class="bi bi-hourglass-split text-primary me-2"></i><span id="modalDestinationTitle"></span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Uyarı ve Başarı Mesajlarının Çıkacağı Alan (Başlangıçta Gizli) -->
-                <div id="bookingAlertMessage" class="alert d-none mb-0" role="alert"></div>
-                
-                <!-- Form Alanı -->
-                <div id="bookingFormArea">
-                    <p class="text-secondary small mb-3">Bilet bedeli kişi başı <strong class="text-light" id="modalPrice"></strong> ₺ olarak hesaplanacaktır.</p>
-                    
-                    <div class="mb-3">
-                        <label class="form-label text-light small">Müşteri ID</label>
-                        <input type="number" id="bookingCustomerId" class="form-control bg-black text-light border-secondary" placeholder="Örn: 1" value="1">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-light small">Yolcu Sayısı</label>
-                        <input type="number" id="bookingPassengerCount" class="form-control bg-black text-light border-secondary" value="1" min="1" max="10">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-secondary-subtle">
-                <button type="button" id="btnCancel" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">İptal</button>
-                <button type="button" id="btnSubmit" class="btn btn-primary rounded-pill px-4" onclick="submitQuickBooking()">Onayla & Satın Al</button>
-            </div>
-        </div>
-    </div>
+								@if (customerIdSession != null)
+								{
+									<button type="button"
+											class="btn btn-outline-primary w-100 rounded-pill py-2 fw-semibold"
+											onclick="openBookingModal('@item.Id', '@item.Title', '@item.Price', '@customerIdSession', '@customerNameSession')">
+										<i class="bi bi-ticket-perforated me-2"></i>Bilet Al
+									</button>
+								}
+								else
+								{
+									<!-- 🚨 Giriş yapmamışsa bizim özel script uyarı fonksiyonunu tetikler -->
+									<button type="button"
+											class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
+											onclick="openLoginRequiredModal()">
+										<i class="bi bi-box-arrow-in-right me-2"></i>Bilet Al
+									</button>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
 </div>
 
-    @section Scripts {
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script>
-                let selectedDestId = null;
-                let destTitle = '';
-                let destPrice = 0;
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
+		let selectedDestId = null;
 
-                // Modal yerine butona basıldığında verileri hafızada tutup doğrudan SweetAlert açabiliriz
-                // Veya mevcut Bootstrap modalinin içindekileri doldurmak yerine direkt Swal.fire tetikleyebiliriz.
-                // İstediğin tam olarak ilk script gibi olması olduğu için Swal yapısına çevirdim:
+		// 🚨 Oturum açılmamışsa tetiklenen şık SweetAlert uyarısı
+		function openLoginRequiredModal() {
+			Swal.fire({
+				title: 'Giriş Yapılması Gerekmektedir',
+				text: 'Zaman seyahati bileti alabilmek için lütfen önce müşteri hesabınızla giriş yapın.',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Giriş Yap',
+				cancelButtonText: 'Vazgeç',
+				buttonsStyling: false,
+				customClass: {
+					popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+					confirmButton: 'btn btn-primary rounded-pill px-4 me-2',
+					cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
+				},
+				background: '#161b22',
+				color: '#e6edf3'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// Kullanıcı "Giriş Yap" butonuna basarsa login sayfasına yönlendir
+					window.location.href = '/Auth/Login';
+				}
+			});
+		}
 
-                function openBookingModal(id, title, price) {
-                    selectedDestId = id;
-                    destTitle = title;
-                    destPrice = price;
+		function openBookingModal(id, title, price, customerId, customerName) {
+			selectedDestId = id;
 
-                    // İlk scriptteki yapıya benzer şekilde rezervasyon formunu Swal HTML içine gömüyoruz
-                    Swal.fire({
-                        title: '<i class="bi bi-airplane me-2"></i>' + title + ' Seyahati',
-                        html: `
-                            <div class="text-center py-2" id="bookingFormArea">
-                                <div class="mb-3 text-start">
-                                    <label class="form-label text-secondary small">Müşteri ID</label>
-                                    <input type="number" id="swalCustomerId" class="form-control bg-dark border-secondary text-light rounded-3" placeholder="Müşteri ID giriniz">
-                                </div>
-                                <div class="mb-3 text-start">
-                                    <label class="form-label text-secondary small">Yolcu Sayısı</label>
-                                    <input type="number" id="swalPassengerCount" class="form-control bg-dark border-secondary text-light rounded-3" value="1" min="1">
-                                </div>
-                                <div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto mt-3">
-                                    <span class="text-secondary small d-block mb-1">Birim Fiyat</span>
-                                    <span class="fs-4 fw-bold text-success">${Number(price).toLocaleString('tr-TR')} ₺</span>
-                                </div>
-                                <div id="swalAlertBox" class="alert d-none mt-3 mb-0"></div>
-                            </div>
-                        `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Onayla & Satın Al',
-                        cancelButtonText: 'İptal',
-                        buttonsStyling: false,
-                        customClass: {
-                            popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
-                            confirmButton: 'btn btn-success rounded-pill px-4 me-2',
-                            cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
-                        },
-                        background: '#161b22',
-                        color: '#e6edf3',
-                        preConfirm: async () => {
-                            const customerId = parseInt(document.getElementById('swalCustomerId').value);
-                            const passengerCount = parseInt(document.getElementById('swalPassengerCount').value);
-                            const alertBox = document.getElementById('swalAlertBox');
+			Swal.fire({
+				title: '<i class="bi bi-airplane me-2"></i>' + title + ' Seyahati',
+				html: `
+					<div class="text-center py-2" id="bookingFormArea">
+						<div class="mb-3 text-start">
+							<label class="form-label text-secondary small">Giriş Yapan Yolcu</label>
+							<input type="text" class="form-control bg-dark border-secondary text-light rounded-3" value="${customerName}" disabled>
+							<input type="hidden" id="swalCustomerId" value="${customerId}">
+						</div>
+						<div class="mb-3 text-start">
+							<label class="form-label text-secondary small">Yolcu Sayısı</label>
+							<input type="number" id="swalPassengerCount" class="form-control bg-dark border-secondary text-light rounded-3" value="1" min="1">
+						</div>
+						<div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto mt-3">
+							<span class="text-secondary small d-block mb-1">Birim Fiyat</span>
+							<span class="fs-4 fw-bold text-success">${Number(price).toLocaleString('tr-TR')} ₺</span>
+						</div>
+						<div id="swalAlertBox" class="alert d-none mt-3 mb-0"></div>
+					</div>
+				`,
+				showCancelButton: true,
+				confirmButtonText: 'Onayla & Satın Al',
+				cancelButtonText: 'İptal',
+				buttonsStyling: false,
+				customClass: {
+					popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+					confirmButton: 'btn btn-success rounded-pill px-4 me-2',
+					cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
+				},
+				background: '#161b22',
+				color: '#e6edf3',
+				preConfirm: async () => {
+					const customerIdVal = parseInt(document.getElementById('swalCustomerId').value);
+					const passengerCount = parseInt(document.getElementById('swalPassengerCount').value);
 
-                            if (!customerId || !passengerCount) {
-                                Swal.showValidationMessage('Lütfen tüm alanları doldurun.');
-                                return false;
-                            }
+					if (!passengerCount || passengerCount < 1) {
+						Swal.showValidationMessage('Lütfen geçerli bir yolcu sayısı girin.');
+						return false;
+					}
 
-                            try {
-                                const response = await fetch('/api/Bookings', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        customerId: customerId,
-                                        timeDestinationId: parseInt(selectedDestId),
-                                        passengerCount: passengerCount
-                                    })
-                                });
+					try {
+						const response = await fetch('/api/Bookings', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								customerId: customerIdVal,
+								timeDestinationId: parseInt(selectedDestId),
+								passengerCount: passengerCount
+							})
+						});
 
-                                if (!response.ok) {
-                                    const err = await response.json();
-                                    throw new Error(err.message || "Rezervasyon yapılamadı.");
-                                }
+						if (!response.ok) {
+							const err = await response.json();
+							throw new Error(err.message || "Rezervasyon yapılamadı.");
+						}
 
-                                return await response.json();
-                            } catch (error) {
-                                Swal.showValidationMessage(`Hata: ${error.message}`);
-                            }
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed && result.value) {
-                            const data = result.value;
+						return await response.json();
+					} catch (error) {
+						Swal.showValidationMessage(`Hata: ${error.message}`);
+					}
+				}
+			}).then((result) => {
+				if (result.isConfirmed && result.value) {
+					const data = result.value;
 
-                            // İlk scriptindeki gibi işlem başarılı olunca gelen animasyonlu başarı popup'ı
-                            Swal.fire({
-                                title: 'Rezervasyon Onaylandı!',
-                                html: `
-                                    <p class="text-secondary mb-3">Zaman sıçraması için koltuklarınız başarıyla ayrıldı.</p>
-                                    <div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto" style="max-width: 250px;">
-                                        <span class="text-secondary small d-block mb-1">Toplam Tutar</span>
-                                        <span class="fs-3 fw-bold text-success">${data.totalPrice.toLocaleString('tr-TR')} ₺</span>
-                                    </div>
-                                `,
-                                icon: 'success',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Kapat',
-                                buttonsStyling: false,
-                                customClass: {
-                                    popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
-                                    confirmButton: 'btn btn-outline-light rounded-pill px-4'
-                                },
-                                background: '#161b22',
-                                color: '#e6edf3'
-                            });
-                        }
-                    });
-                }
-            </script>
-    }
+					Swal.fire({
+						title: 'Rezervasyon Onaylandı!',
+						html: `
+							<p class="text-secondary mb-3">Zaman sıçraması için koltuklarınız başarıyla ayrıldı.</p>
+							<div class="p-3 bg-black border border-secondary-subtle rounded-4 mx-auto" style="max-width: 250px;">
+								<span class="text-secondary small d-block mb-1">Toplam Tutar</span>
+								<span class="fs-3 fw-bold text-success">${data.totalPrice.toLocaleString('tr-TR')} ₺</span>
+							</div>
+						`,
+						icon: 'success',
+						showConfirmButton: true,
+						confirmButtonText: 'Kapat',
+						buttonsStyling: false,
+						customClass: {
+							popup: 'bg-dark border border-secondary text-light rounded-4 p-4',
+							confirmButton: 'btn btn-outline-light rounded-pill px-4'
+						},
+						background: '#161b22',
+						color: '#e6edf3'
+					});
+				}
+			});
+		}
+	</script>
 }
